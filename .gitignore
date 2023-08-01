@@ -1,0 +1,4 @@
+.vscode/
+test/tmp*
+test/performSFI_test_output
+docs/build
