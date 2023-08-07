@@ -1,5 +1,27 @@
 
-"Represents a monochromatic elliptically polarized laser field with Trapezoidal-shape envelope propagating in z direction."
+"""
+```
+struct TrapezoidalLaser <: MonochromaticLaser
+```
+Represents a monochromatic elliptically polarized laser field with Trapezoidal-shape envelope propagating in z direction.
+
+An instance of `TrapezoidalLaser` can be initialized via the constructor method:
+```julia
+TrapezoidalLaser(peak_int, wave_len|ang_freq, cyc_num_turn_on, cyc_num_turn_off, cyc_num_const, ellip, azi=0.0, cep=0.0, t_shift=0.0)
+```
+
+# Parameters
+- `peak_int`        : Peak intensity of the laser field (in W/cm²).
+- `wave_len`        : Wavelength of the laser field (in nm). Must specify either `wave_len` or `ang_freq`.
+- `ang_freq`        : Angular frequency of the laser field (in a.u.). Must specify either `wave_len` or `ang_freq`.
+- `cyc_num_turn_on` : Number of cycles of the laser field in the turn-on stage.
+- `cyc_num_turn_off`: Number of cycles of the laser field in the turn-off stage.
+- `cyc_num_const`   : Number of cycles of the laser field in the constant-intensity stage.
+- `ellip`           : Ellipticity of the laser field [-1≤ε≤1, 0 indicates linear polarization and ±1 indicates circular polarization].
+- `azi`             : Azimuth angle of the laser's polarization's principle axis relative to x axis (in radians) (optional, default 0).
+- `t_shift`         : Time shift of the laser (in a.u.) relative to the beginning of TURN-ON (optional, default 0).
+
+"""
 struct TrapezoidalLaser <: MonochromaticLaser
     "Peak intensity of the laser field (in W/cm^2)."
     peak_int;
@@ -24,9 +46,9 @@ struct TrapezoidalLaser <: MonochromaticLaser
     # Parameters
     - `peak_int`        : Peak intensity of the laser field (in W/cm²).
     - `wave_len`        : Wavelength of the laser field (in nm).
-    - `cyc_num_turn_on` : Number of cycles of the laser field in the turn-on.
-    - `cyc_num_turn_off`: Number of cycles of the laser field in the turn-off.
-    - `cyc_num_const`   : Number of cycles of the laser field in the constant-intensity.
+    - `cyc_num_turn_on` : Number of cycles of the laser field in the turn-on stage.
+    - `cyc_num_turn_off`: Number of cycles of the laser field in the turn-off stage.
+    - `cyc_num_const`   : Number of cycles of the laser field in the constant-intensity stage.
     - `ellip`           : Ellipticity of the laser field [-1≤ε≤1, 0 indicates linear polarization and ±1 indicates circular polarization].
     - `azi`             : Azimuth angle of the laser's polarization's principle axis relative to x axis (in radians) (optional, default 0).
     - `t_shift`         : Time shift of the laser (in a.u.) relative to the beginning of TURN-ON (optional, default 0).
@@ -44,9 +66,9 @@ struct TrapezoidalLaser <: MonochromaticLaser
     - `peak_int`        : Peak intensity of the laser field (in W/cm²).
     - `wave_len`        : Wavelength of the laser field (in nm). Must specify either `wave_len` or `ang_freq`.
     - `ang_freq`        : Angular frequency of the laser field (in a.u.). Must specify either `wave_len` or `ang_freq`.
-    - `cyc_num_turn_on` : Number of cycles of the laser field in the turn-on.
-    - `cyc_num_turn_off`: Number of cycles of the laser field in the turn-off.
-    - `cyc_num_const`   : Number of cycles of the laser field in the constant-intensity.
+    - `cyc_num_turn_on` : Number of cycles of the laser field in the turn-on stage.
+    - `cyc_num_turn_off`: Number of cycles of the laser field in the turn-off stage.
+    - `cyc_num_const`   : Number of cycles of the laser field in the constant-intensity stage.
     - `ellip`           : Ellipticity of the laser field [-1≤ε≤1, 0 indicates linear polarization and ±1 indicates circular polarization].
     - `azi`             : Azimuth angle of the laser's polarization's principle axis relative to x axis (in radians) (optional, default 0).
     - `t_shift`         : Time shift of the laser (in a.u.) relative to the beginning of TURN-ON (optional, default 0).

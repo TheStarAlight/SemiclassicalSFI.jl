@@ -1,11 +1,34 @@
 
-"Represents a monochromatic elliptically polarized laser field with Gaussian-shape envelope propagating in z direction."
+"""
+```
+struct GaussianLaser <: MonochromaticLaser
+```
+Represents a monochromatic elliptically polarized laser field with Gaussian-shape envelope propagating in z direction.
+
+An instance of `GaussianLaser` can be initialized via the constructor method:
+```julia
+GaussianLaser(peak_int, wave_len|ang_freq, spread_cyc_num|spread_duration|FWHM_duration, ellip, azi=0., cep=0., t_shift=0.)
+```
+
+# Parameters
+- `peak_int`        : Peak intensity of the laser field (in W/cm²).
+- `wave_len`        : Wave length of the laser field (in nm). Must specify either `wave_len` or `ang_freq`.
+- `ang_freq`        : Angular frequency of the laser field (in a.u.). Must specify either `wave_len` or `ang_freq`.
+- `spread_cyc_num`  : Temporal width (converting to cycle numbers) of the laser field (in a.u.), namely σ. Must specify one in `spread_cyc_num`, `spread_duration` and `FWHM_duration`.
+- `spread_duration` : Temporal width of the laser field (in a.u.). Must specify one in `spread_cyc_num`, `spread_duration` and `FWHM_duration`.
+- `FWHM_duration`   : Temporal FWHM (Full Width at Half Maximum) of the laser field (in a.u.). Must specify one in `spread_cyc_num`, `spread_duration` and `FWHM_duration`.
+- `ellip`           : Ellipticity of the laser field [-1≤ε≤1, 0 indicates linear polarization and ±1 indicates circular polarization].
+- `azi`             : Azimuth angle of the laser's polarization's principle axis relative to x axis (in radians) (optional, default 0).
+- `cep`             : Carrier-Envelope-Phase of the laser field (optional, default 0).
+- `t_shift`         : Time shift of the laser (in a.u.) relative to the peak (optional, default 0).
+
+"""
 struct GaussianLaser <: MonochromaticLaser
     "Peak intensity of the laser field (in W/cm^2)."
     peak_int;
     "Wavelength of the laser field (in NANOMETER)."
     wave_len;
-    "Temporal width (converting to cycle numbers) of the laser field, namely σ."
+    "Temporal width (converting to cycle numbers) of the laser field (in a.u.), namely σ."
     spread_cyc_num;
     "Ellipticity of the laser field."
     ellip;
@@ -21,7 +44,7 @@ struct GaussianLaser <: MonochromaticLaser
     # Parameters
     - `peak_int`        : Peak intensity of the laser field (in W/cm²).
     - `wave_len`        : Wavelength of the laser field (in nm).
-    - `spread_cyc_num`  : Temporal width (converting to cycle numbers) of the laser field, namely σ.
+    - `spread_cyc_num`  : Temporal width (converting to cycle numbers) of the laser field (in a.u.), namely σ.
     - `ellip`           : Ellipticity of the laser field [-1≤e≤1, 0 indicates linear polarization and ±1 indicates circular polarization].
     - `azi`             : Azimuth angle of the laser's polarization's principle axis relative to x axis (in radians) (optional, default 0).
     - `cep`             : Carrier-Envelope-Phase of the laser field (optional, default 0).
@@ -41,9 +64,9 @@ struct GaussianLaser <: MonochromaticLaser
     - `peak_int`        : Peak intensity of the laser field (in W/cm²).
     - `wave_len`        : Wave length of the laser field (in nm). Must specify either `wave_len` or `ang_freq`.
     - `ang_freq`        : Angular frequency of the laser field (in a.u.). Must specify either `wave_len` or `ang_freq`.
-    - `spread_cyc_num`  : Temporal width (converting to cycle numbers) of the laser field, namely σ. Must specify one in `spread_cyc_num`, `spread_duration` and `FWHM_duration`.
+    - `spread_cyc_num`  : Temporal width (converting to cycle numbers) of the laser field (in a.u.), namely σ. Must specify one in `spread_cyc_num`, `spread_duration` and `FWHM_duration`.
     - `spread_duration` : Temporal width of the laser field (in a.u.). Must specify one in `spread_cyc_num`, `spread_duration` and `FWHM_duration`.
-    - `FWHM_duration`   : Temporal FWHM (Full Width at Half Maxima) of the laser field (in a.u.). Must specify one in `spread_cyc_num`, `spread_duration` and `FWHM_duration`.
+    - `FWHM_duration`   : Temporal FWHM (Full Width at Half Maximum) of the laser field (in a.u.). Must specify one in `spread_cyc_num`, `spread_duration` and `FWHM_duration`.
     - `ellip`           : Ellipticity of the laser field [-1≤ε≤1, 0 indicates linear polarization and ±1 indicates circular polarization].
     - `azi`             : Azimuth angle of the laser's polarization's principle axis relative to x axis (in radians) (optional, default 0).
     - `cep`             : Carrier-Envelope-Phase of the laser field (optional, default 0).

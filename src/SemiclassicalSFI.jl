@@ -32,8 +32,8 @@ Performs a semiclassical simulation with given parameters.
 
 ## Required params. for all:
 - `init_cond_method = <:ADK|:SFA|:SFAAE|:WFAT|:MOADK>`  : Method of electrons' initial conditions. Currently supports `:ADK`, `:SFA`, `:SFAAE` for atoms and `:WFAT`, `:MOADK` for molecules.
-- `laser::Laser`                                        : Parameters of the laser field.
-- `target::Target`                                      : Parameters of the target.
+- `laser::Laser`                                        : A `Lasers.Laser` object containing information of the laser field.
+- `target::Target`                                      : A `Targets.Target` object containing information of the atom/molecule target.
 - `sample_t_intv = (start,stop)`                        : Time interval in which the initial electrons are sampled.
 - `sample_t_num`                                        : Number of time samples.
 - `traj_t_final`                                        : Time when every trajectory simulation ends.
@@ -53,7 +53,7 @@ Performs a semiclassical simulation with given parameters.
 ## Optional params. for all:
 - `save_path`                                       : Output HDF5 file path.
 - `save_3D_spec = false`                            : Determines whether the 3D momentum spectrum is saved (if not, will only save 2D by flattening on the xy plane) (default `false`).
-- `traj_phase_method = <:CTMC|:QTMC|:SCTS>`         : Method of classical trajectories' phase (default `CTMC`). Currently `:QTMC` and `:SCTS` only supports atom targets.
+- `traj_phase_method = <:CTMC|:QTMC|:SCTS>`         : Method of classical trajectories' phase (default `:CTMC`). Currently `:QTMC` and `:SCTS` only supports atom targets.
 - `traj_rtol = 1e-6`                                : Relative error tolerance when solving classical trajectories using adaptive methods (default `1e-6`).
 - `traj_nondipole = false`                          : Determines whether the non-dipole effect is taken account in the simulation (default `false`).
 - `traj_GPU = false`                                : [Experimental] Determines whether to enable GPU acceleration in trajectory simulation (default `false`).

@@ -1,6 +1,23 @@
 using StaticArrays
 
-"Represents an atom under single-active-electron (SAE) approximation."
+"""
+```
+struct SAEAtom <: SAEAtomBase
+```
+
+Represents an atom under single-active-electron (SAE) approximation.
+
+An instance of `SAEAtom` can be initialized via the constructor method:
+```julia
+SAEAtom(Ip, Z, a1=0.0, b1=0.0, a2=0.0, b2=0.0, a3=0.0, b3=0.0, name="[NA]")
+```
+
+# Example:
+```jldoctest
+julia> t = Targets.SAEAtom(Ip=0.9035698802, Z=1.0, a1=1.230723, b1=0.6620055, a2=-1.325040, b2=1.236224, a3=-0.2307230, b3=0.4804286, name="He")
+[SAEAtom] Atom He, Ip=0.9035698802, Z=1.0
+```
+"""
 struct SAEAtom <: SAEAtomBase
 # should implement TargetPotential, TargetForce, TrajectoryFunction, ADKRateExp.
     "Ionization potential of the atom."

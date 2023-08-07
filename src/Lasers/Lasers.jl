@@ -1,6 +1,6 @@
 
 """
-The Laser module provides information about laser fields.
+The `Lasers` module provides information about laser fields.
 """
 module Lasers
 

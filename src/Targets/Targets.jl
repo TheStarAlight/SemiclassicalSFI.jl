@@ -1,7 +1,7 @@
 
 
 """
-The Targets module provides information about the targeting atoms or molecules.
+The `Targets` module provides information about the targeting atoms or molecules.
 """
 module Targets
 

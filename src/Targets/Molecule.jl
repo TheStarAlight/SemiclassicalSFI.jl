@@ -5,7 +5,50 @@ using Rotations
 using Dates
 using HDF5
 
-"Represents a molecule."
+"""
+```
+struct Molecule <: Target
+```
+
+Represents a generic molecule.
+
+# Fresh initialization
+
+A new instance of `Molecule` can be initialized via the constructor method:
+```julia
+Molecule(atoms, atom_coords, charge::Integer=0, name::String="[NA]", data_path::String="", calc_energy::Bool=false, rot_α=0.0, rot_β=0.0, rot_γ=0.0)
+```
+
+## Parameters:
+- `atoms`                   : Atoms in the molecule, stored as a vector of String.
+- `atom_coords`             : Atoms' coordinates in the molecule (in **Angstrom**), stored as a N×3 matrix.
+- `charge`                  : Total charge of the molecule (ion) (optional, default 0).
+- `name`                    : Name of the molecule (optional).
+- `data_path`               : Path to the molecule's data (default empty). Specifying an empty string indicates no saving (but can still be saved later by calling method `MolSaveDataAs`).
+- `calc_energy`             : Indicates whether to calculate the energy data of the molecule upon initialization (default false).
+- `rot_α`,`rot_β`,`rot_γ`   : Euler angles (ZYZ convention) specifying the molecule's orientation (optional, default 0).
+
+## Example:
+The following example creates a new instance of Hydrogen `Molecule`, and saves the data related to the `Molecule` to the specified path.
+```jldoctest
+julia> mol = Targets.Molecule(atoms=["H","H"], atom_coords=[0 0 -0.375; 0 0 0.375], charge=0, name="Hydrogen", data_path="./Molecule_Hydrogen.h5")
+[ Info: [Molecule] Data saved for molecule Hydrogen at "./Molecule_Hydrogen.h5".
+Molecule [Hydrogen]
+```
+
+# Initialization from existing data
+
+To initialize an instance of `Molecule` from existing external data, invoke
+```julia
+Molecule(data_path::String, rot_α=0.0, rot_β=0.0, rot_γ=0.0)
+```
+
+## Example:
+```jldoctest
+julia> mol = Targets.Molecule("./Molecule_Hydrogen.h5")
+Molecule [Hydrogen]
+```
+"""
 mutable struct Molecule <: Target
 
     "Path to the data file that stores information and data about the molecule."
@@ -63,7 +106,7 @@ mutable struct Molecule <: Target
     Initializes a new instance of `Molecule` with given parameters.
     # Parameters
     - `atoms`                   : Atoms in the molecule, stored as a vector of String.
-    - `atom_coords`             : Atoms' coordinates in the molecule, stored as a N×3 matrix.
+    - `atom_coords`             : Atoms' coordinates in the molecule (in **Angstrom**), stored as a N×3 matrix.
     - `charge`                  : Total charge of the molecule (ion) (optional, default 0).
     - `name`                    : Name of the molecule (optional).
     - `data_path`               : Path to the molecule's data (default empty). Specifying an empty string indicates no saving (but can still be saved later by calling method `MolSaveDataAs`).
@@ -357,12 +400,28 @@ function MolAsympCoeff_mMax(mol::Molecule, orbitIdx_relHOMO::Integer)
     return size(MolAsympCoeff(mol, orbitIdx_relHOMO), 2) - 1
 end
 
-"Gets the Euler angles (ZYZ convention) specifying the molecule's orientation in format (α,β,γ)."
+"""
+```
+MolRotation(mol::Molecule)
+```
+Gets the Euler angles (ZYZ convention) specifying the molecule's orientation in format (α,β,γ).
+"""
 MolRotation(mol::Molecule) = (mol.rot_α,mol.rot_β,mol.rot_γ)
-"Sets the Euler angles (ZYZ convention) specifying the molecule's orientation in format (α,β,γ)."
+"""
+```
+SetMolRotation(mol::Molecule, α,β,γ)
+```
+Sets the Euler angles (ZYZ convention) specifying the molecule's orientation in format (α,β,γ).
+"""
 function SetMolRotation(mol::Molecule, α,β,γ)
     mol.rot_α = α; mol.rot_β = β; mol.rot_γ = γ;
 end
+"""
+```
+SetMolRotation(mol::Molecule, (α,β,γ))
+```
+Sets the Euler angles (ZYZ convention) specifying the molecule's orientation in format (α,β,γ).
+"""
 function SetMolRotation(mol::Molecule, (α,β,γ))
     SetMolRotation(mol, α,β,γ)
 end
@@ -423,10 +482,31 @@ function _MolSaveEnergyData(mol::Molecule)
 end
 
 """
-Calculates the WFAT data of the molecule and saves the data.
-- `MCType`              : Type of `MolecularCalculator` if it is not initialized. `PySCFMolecularCalculator` if `MC` is not specified.
+```
+MolCalcWFATData!(mol::Molecule,
+                 orbitIdx_relHOMO::Integer = 0,
+                 MCType::Type = PySCFMolecularCalculator;
+                 kwargs...)
+```
+Calculates the WFAT data of the `Molecule` and saves the data.
+- `MCType`              : Type of `MolecularCalculator` if the one for this `Molecule` is not initialized before. Default is `PySCFMolecularCalculator` if the `MCType` is not specified.
 - `orbitIdx_relHOMO`    : Index of selected orbit relative to the HOMO (e.g., 0 indicates HOMO, and -1 indicates HOMO-1) (default 0).
 - `kwargs...`           : Keyword arguments to pass to the `MolecularCalculator` and the `calcStructFactorData` method, e.g. `basis`, `grid_rNum`, `grid_rMax`, `sf_lMax`, ⋯
+
+# Example:
+```jldoctest
+julia> mol = Targets.Molecule(["H","H"], [0 0 -0.375; 0 0 0.375], 0, "Hydrogen")
+Molecule [Hydrogen]
+
+julia> Targets.MolCalcWFATData!(mol, orbitIdx_relHOMO=0, basis="6-31g")
+[ Info: [PySCFMolecularCalculator] Running molecular calculation...
+[ Info: Finished initialization [taking 0.0466409 second(s)].
+[ Info: [PySCFMolecularCalculator] Running calculation of structure factor data... (ionizing orbital 0 relative to HOMO)
+✓ Calculating the effective potential... (720000 pts)    Time: 0:00:22
+Progress: 100%[●●●●●●●●●●●●●●●●●●●●●●●●●] Time: 0:00:22 (31.08 μs/it)
+✓ Calculating the integrals... (7986 integrals)          Time: 0:02:48
+Progress: 100%[●●●●●●●●●●●●●●●●●●●●●●●●●] Time: 0:02:48 (21.08 ms/it)
+```
 """
 function MolCalcWFATData!(mol::Molecule, orbitIdx_relHOMO::Integer = 0, MCType::Type = PySCFMolecularCalculator; kwargs...)
     if isnothing(mol.mol_calc)
@@ -482,10 +562,25 @@ function _MolSaveWFATData(mol::Molecule, orbitIdx_relHOMO::Integer)
     @info "[Molecule] WFAT data saved for molecule $(mol.name) at \"$(mol.data_path)\"."
 end
 """
-Calculates the asymptotic coefficients of the molecule and saves the data.
-- `MCType`              : Type of `MolecularCalculator` if it is not initialized. `PySCFMolecularCalculator` if `MC` is not specified.
+```
+MolCalcAsympCoeff!(mol::Molecule,
+                   orbitIdx_relHOMO::Integer = 0,
+                   MCType::Type = PySCFMolecularCalculator;
+                   kwargs...)
+```
+Calculates the asymptotic coefficients of the `Molecule` and saves the data.
+- `MCType`              : Type of `MolecularCalculator` if the one for this `Molecule` is not initialized before. Default is `PySCFMolecularCalculator` if `MCType` is not specified.
 - `orbitIdx_relHOMO`    : Index of selected orbit relative to the HOMO (e.g., 0 indicates HOMO, and -1 indicates HOMO-1) (default 0).
 - `kwargs...`           : Keyword arguments to pass to the `MolecularCalculator`, e.g. `grid_rNum`, `l_max`.
+
+## Example:
+```jldoctest
+julia> mol = Molecule(["H","H"], [0 0 -0.375; 0 0 0.375], 0, "Hydrogen")
+Molecule [Hydrogen]
+
+julia> MolCalcAsympCoeff!(mol, basis="6-31g")
+[ Info: [PySCFMolecularCalculator] Running calculation of asymptotic coefficients... (ionizing orbital 0 relative to HOMO)
+```
 """
 function MolCalcAsympCoeff!(mol::Molecule, orbitIdx_relHOMO::Integer = 0, MCType::Type = PySCFMolecularCalculator; kwargs...)
     if isnothing(mol.mol_calc)
@@ -538,7 +633,12 @@ function _MolSaveAsympCoeff(mol::Molecule, orbitIdx_relHOMO::Integer)
     @info "[Molecule] Asymptotic coefficients of orbital index $(orbitIdx_relHOMO) saved for molecule $(mol.name) at \"$(mol.data_path)\"."
 end
 
-"Saves the data of the `Molecule` to the `data_path` (will change the `Molecule`'s inner field `data_path`)."
+"""
+```
+MolSaveDataAs(mol::Molecule, data_path::String)
+```
+Saves the data of the `Molecule` to the `data_path` (will change the `Molecule`'s inner field `data_path`).
+"""
 function MolSaveDataAs(mol::Molecule, data_path::String)
     function defaultFileName()
         Y,M,D = yearmonthday(now())

@@ -1,5 +1,27 @@
 
-"Represents a monochromatic elliptically polarized laser field with Cos4-shape envelope propagating in z direction."
+"""
+```
+struct Cos4Laser <: MonochromaticLaser
+```
+Represents a monochromatic elliptically polarized laser field with Cos4-shape envelope propagating in z direction.
+
+An instance of `Cos4Laser` can be initialized via the constructor method:
+```julia
+Cos4Laser(peak_int, wave_len|ang_freq, cyc_num|duration, ellip, azi=0.0, cep=0.0, t_shift=0.0)
+```
+
+# Parameters
+- `peak_int`    : Peak intensity of the laser field (in W/cm²).
+- `wave_len`    : Wave length of the laser field (in nm). Must specify either `wave_len` or `ang_freq`.
+- `ang_freq`    : Angular frequency of the laser field (in a.u.). Must specify either `wave_len` or `ang_freq`.
+- `cyc_num`     : Number of cycles of the laser field. Must specify either `cyc_num` or `duration`.
+- `duration`    : Duration of the laser field (in a.u.). Must specify either `cyc_num` or `duration`.
+- `ellip`       : Ellipticity of the laser field [-1≤ε≤1, 0 indicates linear polarization and ±1 indicates circular polarization].
+- `azi`         : Azimuth angle of the laser's polarization's principle axis relative to x axis (in radians) (optional, default 0).
+- `cep`         : Carrier-Envelope-Phase of the laser field (optional, default 0).
+- `t_shift`     : Time shift of the laser (in a.u.) relative to the peak (optional, default 0).
+
+"""
 struct Cos4Laser <: MonochromaticLaser
     "Peak intensity of the laser field (in W/cm^2)."
     peak_int;
